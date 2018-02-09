@@ -114,6 +114,35 @@ def temperature_and_lux():
         n = (x / d - 0.3320) / (0.1858 - y / d)
         cct = 449.0 * n**3 + 3525.0 * n**2 + 6823.3 * n + 5520.33
         return cct, y
+        
+def colourValue(r,g,b):
+    R=r/255
+    G=g/255
+    B=b/255
+    minimum=min(R,G,B)
+    maximum=max(R,G,B)
+    L=(minimum+maximum)/2
+    V=maximum
+    delta=maximum-minimum
+    K=1-maximum
+    C=(1-R-K)/(1-K)
+    M=(1-G-K)/(1-K)
+    Y=(1-B-K)/(1-K)
+    
+    if delta==0:
+      return(0,0,L*100,V*100,C,M,Y,K)
+    else:
+      S=delta/(1-abs(2*L-1))
+
+
+    if R>G and R>B:
+        Hue=60*(((G-B)/delta)%6)
+    elif G>B:
+        Hue=60*(2.0+(B-R)/(delta))
+    else:
+        Hue=60*(4.0+(R-G)/(delta))
+    
+    return Hue,S*100,L*100,V*100,C,M,Y,K       
 
 def get_rgb():
     r=getRed()
@@ -123,7 +152,7 @@ def get_rgb():
     red=min(255,int(2.1*r*256/c))
     green=min(255,int(1.7*g*256/c))
     blue=min(255,int(1.7*b*256/c))
-    return r,g,b,c,"{0:02x}{1:02x}{2:02x}".format(int(red),
+    return colourValue(red,green,blue),"{0:02x}{1:02x}{2:02x}".format(int(red),
                              int(green),
                              int(blue))
 
