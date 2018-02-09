@@ -144,7 +144,7 @@ def colourValue(r,g,b):
     
     return Hue,S*100,L*100,V*100,C,M,Y,K       
 
-def get_rgb():
+def get_colour():
     r=getRed()
     g=getGreen()
     b=getBlue()
@@ -189,10 +189,10 @@ def publishMessage(client, topic, payload):
 
 #Need for while loop
 def sendData(client):
-    rgb = get_rgb()
+    colour = get_colour()
     hex = html_hex()
     tAndL = temperature_and_lux()
-    data = {"red": rgb[0], "green": rgb[1], "blue": rgb[2], "hex": rgb[4], "temperature": tAndL[0], "intensity": tAndL[1]}
+    data = {"Hue": colour[0], "Saturation": colour[1], "Lightness": colour[2],"Value": colour[3],"C":colour[4],"M":colour[5],"Y":colour[6],"K":colour[7], "hex": colour[8], "temperature": tAndL[0], "intensity": tAndL[1]}
     payload = toPayLoad(message=data)
     # client.publish(topic, bytes(paylod, 'utf-8'))
     publishMessage(client=client, topic=topic, payload=payload)
