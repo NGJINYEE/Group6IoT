@@ -114,7 +114,7 @@ def temperature_and_lux():
         n = (x / d - 0.3320) / (0.1858 - y / d)
         cct = 449.0 * n**3 + 3525.0 * n**2 + 6823.3 * n + 5520.33
         return cct, y
-        
+
 def colourValue(r,g,b):
     R=r/255
     G=g/255
@@ -128,7 +128,7 @@ def colourValue(r,g,b):
     C=(1-R-K)/(1-K)
     M=(1-G-K)/(1-K)
     Y=(1-B-K)/(1-K)
-    
+
     if delta==0:
       return(0,0,L*100,V*100,C,M,Y,K)
     else:
@@ -141,8 +141,8 @@ def colourValue(r,g,b):
         Hue=60*(2.0+(B-R)/(delta))
     else:
         Hue=60*(4.0+(R-G)/(delta))
-    
-    return Hue,S*100,L*100,V*100,C,M,Y,K       
+
+    return Hue,S*100,L*100,V*100,C,M,Y,K
 
 def get_colour():
     r=getRed()
@@ -152,9 +152,7 @@ def get_colour():
     red=min(255,int(2.1*r*256/c))
     green=min(255,int(1.7*g*256/c))
     blue=min(255,int(1.7*b*256/c))
-    return colourValue(red,green,blue),"{0:02x}{1:02x}{2:02x}".format(int(red),
-                             int(green),
-                             int(blue))
+    return colourValue(red,green,blue), "{0:02x}{1:02x}{2:02x}".format(int(red), int(green), int(blue))
 
 def html_rgb():
     r, g, b, c = getRed(),getGreen(),getBlue(),getIntensity()
@@ -192,7 +190,11 @@ def sendData(client):
     colour = get_colour()
     hex = html_hex()
     tAndL = temperature_and_lux()
-    data = {"Hue": colour[0], "Saturation": colour[1], "Lightness": colour[2],"Value": colour[3],"C":colour[4],"M":colour[5],"Y":colour[6],"K":colour[7], "hex": colour[8], "temperature": tAndL[0], "intensity": tAndL[1]}
+    data = {"Hue": colour[0][0], "Saturation": colour[0][1],
+            "Lightness": colour[0][2],"Value": colour[0][3],
+            "C":colour[0][4],"M":colour[0][5],"Y":colour[0][6],"K":colour[0][7],
+            "hex": colour[1], "temperature": tAndL[0], "intensity": tAndL[1]}
+
     payload = toPayLoad(message=data)
     # client.publish(topic, bytes(paylod, 'utf-8'))
     publishMessage(client=client, topic=topic, payload=payload)
