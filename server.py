@@ -1,31 +1,17 @@
-import sys
-import getpass
-import re
-
-from flask import Flask, render_template, request, redirect, Response
-from flask.json import jsonify
-import random, json
+from flask import Flask, render_template, request, url_for, jsonify
 
 app = Flask(__name__)
-app.debug = True
 
-@app.route('/')
-def hello():
-    return "Hello World!"
+color = "I'm red!"
 
-# @app.route('/receiver', methods = ['GET', 'POST'])
-# def worker():
-#     #read json + reply
-#     data = request.get_json(force=True)
-#     result = ''
-#
-#     for item in data:
-#         #loop over every row
-#         result += str(item['userPath']) + str(item['commitKey']) + '\n'
-#
-#     gitChange = gitShowResult(data)
-#
-#     return json.dumps(gitChange)
+@app.route('/tests/endpoint', methods=['POST'])
+def my_test_endpoint():
+    input_json = request.get_json(force=True)
+    # force=True, above, is necessary if another developer
+    # forgot to set the MIME type to 'application/json'
+    print('data from client:', input_json)
+    dictToReturn = {'answer':42}
+    return jsonify(dictToReturn)
 
-if __name__ == "__main__":
-    app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
