@@ -1,7 +1,7 @@
 // alert('Connected!');
 console.log('Connected!');
 
-$('button').click(function(){
+$('#change').click(function(){
   console.log('Clicked!');
   testData = {data: 'Hello from js!'};
   $.ajax({
