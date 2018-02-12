@@ -13,8 +13,10 @@ $('#change').click(function(){
     success: function(data) {
       // console.log(data.hex);
       const color = '#' + data.hex;
+      const matchedColor = '#000000'
       // console.log(color);
-      $('.box').css({backgroundColor: color});
+      $('.your-color').css({backgroundColor: color});
+      $('.closest-color').css({backgroundColor: matchedColor});
     }
   });
 });

@@ -10,7 +10,6 @@ color_r = {"brown1": '662200', "brown2": '802b00', "brown3": '993300', "brown4":
 color_g = {"green1": '003300', "green2": '006600', "green3": '009900', "green4": '00cc00', "green5": '00ff00'}
 color_b = {"blue1": '000099', "blue2": '0000cc', "blue3": '0000ff', "blue4": '1a1aff', "blue5": '3333ff', "purple1": '1a0033', "purple2": '400080', "purple3": '5900b3', "purple4": '6600cc', "purple5": '8000ff'}
 
-
 def getClosestColor(hex_val):
     closest_color = list(color_r.keys())[0]
     closest_color2 = list(color_r.keys())[0]
@@ -18,7 +17,7 @@ def getClosestColor(hex_val):
     y = 255**2.0 + 255**2.0 + 255**2.0
     min_val = math.sqrt(y)
     min_val2 = math.sqrt(y)
-    
+
     #color from sensor
         R = int(hex_val[:2], 16)
         G = int(hex_val[2:4], 16)
@@ -36,7 +35,7 @@ def getClosestColor(hex_val):
         g = int(color_value[2:4], 16)
         b = int(color_value[4:], 16)
 
-        
+
 
         #human eye sensitivity is 0.3 to red, 0.59 to green, and 0.11 to blue
         x = (r - R)**2.0 + (g - G)**2.0 + (b - B)**2.0
