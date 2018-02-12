@@ -144,15 +144,19 @@ def colourValue(r,g,b):
 
     return Hue,S*100,L*100,V*100,C,M,Y,K
 
+
 def get_colour():
     r=getRed()
     g=getGreen()
     b=getBlue()
     c=getIntensity()
-    red=min(255,int(2.1*r*256/c))
-    green=min(255,int(1.7*g*256/c))
-    blue=min(255,int(1.7*b*256/c))
-    return colourValue(red,green,blue), "{0:02x}{1:02x}{2:02x}".format(int(red), int(green), int(blue))
+    red=min(255,int(6*r/256))
+    green=min(255,int(4.5*g/256))
+    blue=min(255,int(6*b/256))
+    return colourValue(red,green,blue),"{0:02x}{1:02x}{2:02x}".format(int(red),
+                             int(green),
+                             int(blue))
+
 
 def html_rgb():
     r, g, b, c = getRed(),getGreen(),getBlue(),getIntensity()
