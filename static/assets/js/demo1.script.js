@@ -12,11 +12,13 @@ $('#change').click(function(){
     contentType: 'application/json',
     success: function(data) {
       // console.log(data.hex);
-      const color = '#' + data.hex;
-      const matchedColor = '#000000'
+      const oriColor = '#' + data.oriHex;
+      const closestColor = '#' + data.closestHex;
+      // const matchedColor = '#000000'
       // console.log(color);
-      $('.your-color').css({backgroundColor: color});
-      $('.closest-color').css({backgroundColor: matchedColor});
+      // console.log(data);
+      $('.your-color').css({backgroundColor: oriColor});
+      $('.closest-color').css({backgroundColor: closestColor});
     }
   });
 });

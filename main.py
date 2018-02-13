@@ -21,28 +21,15 @@ _CYCLES = (0, 1, 2, 3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60)
 topic = 'esys/Arcus/color'
 
 #Functions
+def integration_time(value=None):
+        value = min(614.4, max(2.4, value))
+        cycles = int(value / 2.4)
+        i2c.writeto_mem(41,0x81,bytearray([256 - cycles]))
+
 def initialize():
     #Activate the sensor reading
     i2c.writeto_mem(41,0x80,bytearray([0x03]))
-
-def sensor_enable_all(interrupt,wait,RGBC,power):
-    enable=interrupt<<4 | wait<<3 | RGBC <<1 | power
-    i2c.writeto_mem(41,0x80,bytearray([enable]))
-
-def sensor_disable():
-    i2c.writeto_mem(41,0x80,bytearray([0x00]))
-
-def persistence_register(cycle=None):
-    if cycle not in _CYCLES:
-            raise ValueError("cycle must be 0, 1, 2, 3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55 or 60")
-    else:
-            i2c.writeto_mem(41,0x8C,bytearray([_CYCLES.index(cycle)]))
-
-def interrupt_threshold(upper2,upper1,lower2,lower1):
-    i2c.writeto_mem(41,0x84,bytearray([lower1]))
-    i2c.writeto_mem(41,0x85,bytearray([lower2]))
-    i2c.writeto_mem(41,0x86,bytearray([upper1]))
-    i2c.writeto_mem(41,0x87,bytearray([upper2]))
+    integration_time(2.4)
 
 def getGreen():
     green = i2c.readfrom_mem(41,0x98,2)
@@ -59,51 +46,6 @@ def getBlue():
 def getIntensity():
     clear = i2c.readfrom_mem(41,0x94,2)
     return int.from_bytes(clear,'little')
-
-def read():
-    green=getGreen()
-    red=getRed()
-    blue=getBlue()
-    clear=getIntensity()
-    return 'red: {} green: {} blue: {} intensity: {} valid: {}'.format(red,green,blue, clear,valid())      #1
-
-def integration_time(value=None):
-        value = min(614.4, max(2.4, value))
-        cycles = int(value / 2.4)
-        i2c.writeto_mem(41,0x81,bytearray([256 - cycles]))
-
-def wait_time(value=None):
-       value = min(614.4, max(2.4, value))
-       cycles = int(value / 2.4)
-       i2c.writeto_mem(41,0x83,bytearray([256 - cycles]))
-
-def sensor_id():
-      return i2c.readfrom_mem(41,0x92,1)
-
-def status():
-      return i2c.readfrom_mem(41,0x93,1)
-
-def read_memory():
-    return i2c.readfrom_mem(41,0x80,32)
-
-def gain(gain):
-    _GAINS = (1, 4, 16, 60)
-    if gain not in _GAINS:
-            raise ValueError("gain must be 1, 4, 16 or 60")
-    else:
-         i2c.writeto_mem(41,0x8F,bytearray([_GAINS.index(gain)]))
-
-def wlong(wait_multiply_enable):
-    if wait_multiply_enable == 1:
-         i2c.writeto_mem(41,0x8D,bytearray([2]))
-    elif wait_multiply_enable ==0:
-        i2c.writeto_mem(41,0x8D,bytearray([0]))
-
-def valid():
-        return bool(int.from_bytes(status(),'big') & 0x01)
-
-def clear_interrupt():
-    i2c.writeto(41,bytearray([0xe6]))
 
 def temperature_and_lux():
         r, g, b, c = getRed(),getGreen(),getBlue(),getIntensity()
@@ -144,15 +86,19 @@ def colourValue(r,g,b):
 
     return Hue,S*100,L*100,V*100,C,M,Y,K
 
-
 def get_colour():
     r=getRed()
     g=getGreen()
     b=getBlue()
     c=getIntensity()
-    red=min(255,int(6*r/256))
-    green=min(255,int(4.5*g/256))
-    blue=min(255,int(6*b/256))
+    if c > 20000:
+        red=min(255,int(5.5*r))
+        green=min(255,int(5*g))
+        blue=min(255,int(4.5*b))
+    else:
+        red=min(255,int(7*r))
+        green=min(255,int(4.5*g))
+        blue=min(255,int(4.5*b))
     return colourValue(red,green,blue),"{0:02x}{1:02x}{2:02x}".format(int(red),
                              int(green),
                              int(blue))
@@ -165,11 +111,11 @@ def html_rgb():
     blue = pow((int((b/c) * 256) / 255), 2.5) * 255
     return red, green, blue
 
-def html_hex():
-    r, g, b = html_rgb()
-    return "{0:02x}{1:02x}{2:02x}".format(int(r),
-                             int(g),
-                             int(b))
+# def html_hex():
+#     r, g, b = html_rgb()
+#     return "{0:02x}{1:02x}{2:02x}".format(int(r),
+#                              int(g),
+#                              int(b))
 
 def toPayLoad(message):
     payload = ujson.dumps(message)
@@ -192,7 +138,7 @@ def publishMessage(client, topic, payload):
 #Need for while loop
 def sendData(client):
     colour = get_colour()
-    hex = html_hex()
+    # hex = html_hex()
     tAndL = temperature_and_lux()
     data = {"Hue": colour[0][0], "Saturation": colour[0][1],
             "Lightness": colour[0][2],"Value": colour[0][3],
@@ -213,6 +159,7 @@ def main():
     initialize()
     #connect to client
     client = connectToWifi(id=ourId, password=ourPassword)
+    time.sleep(1)
     client.connect()
     time.sleep(1)
     while True:

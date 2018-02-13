@@ -9,24 +9,27 @@
 		<title>Arcus</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/main.css')}}" />
-		<noscript><link rel="stylesheet" href="{{ url_for('static', filename='assets/css/noscript.css')}} " /></noscript>
+		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/main.css')}}" /> -->
+		<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/noscript.css')}} " />
 	</head>
 	<body>
 
-		<div class="closest-color">
-			Closest Color!
+	<div class="container">
+		<label>	Closest Color: </label>
+		<div class="closest-color color-container"></div>
+		<label>	Your Color: </label>
+		<div class="your-color color-container">
 		</div>
-		<div class="your-color">
-			Your Color!
+		<div>
+			<button id="change"> Click Me! </button>
 		</div>
-		<button id="change"> Click Me! </button>
+	</div>
 		<!-- Scripts -->
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-			<!-- <script type=text/javascript src="{{ url_for('static', filename='assets/js/jquery.min.js') }}"></script> -->
-			<script type="text/javascript" src="{{ url_for('static', filename='assets/js/skel.min.js') }}"></script>
-			<script type="text/javascript" src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
-			<script type="text/javascript" src="{{ url_for('static', filename='assets/js/x.script.js') }}"></script>
+		<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+			<script src="{{ url_for('static', filename='assets/js/jquery.min.js') }}"></script>
+			<!-- <script type="text/javascript" src="{{ url_for('static', filename='assets/js/skel.min.js') }}"></script>
+			<script type="text/javascript" src="{{ url_for('static', filename='assets/js/main.js') }}"></script> -->
+			<script type="text/javascript" src="{{ url_for('static', filename='assets/js/demo1.script.js') }}"></script>
 
 	</body>
 </html>

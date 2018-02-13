@@ -1,11 +1,18 @@
-/*
-	Ethereal by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
+body {
+	overflow-y: auto;
+	margin: 20px 20px 20px 20px;
+}
 
-/* Page */
+.color-container {
+	width: 200px;
+	height: 200px;
+}
 
-	body {
-		overflow-x: scroll;
-	}
+.container {
+	margin: 12px 12px 12 12px;
+}
+
+div {
+	margin-top: 12px;
+	margin-bottom: 12px;
+}

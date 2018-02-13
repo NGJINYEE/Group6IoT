@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, jsonify
-# from flask_socketio import SocketIO, emit
+import json
 
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'secret!'
@@ -20,19 +20,24 @@ def my_test_endpoint():
     input_json = request.get_json(force=True)
     # force=True, above, is necessary if another developer
     # forgot to set the MIME type to 'application/json'
-    print('data from client:', input_json)
-    f = open('simple-database.txt', 'w')
-    f.write(str(input_json))
-    f.close()
+    print('closest:', input_json["closest"], 'ori-color:', input_json["ori-color"])
+    # f = open('simple-database.txt', 'w')
+    # f.write(str(input_json))
+    json.dump(input_json, open("simple-database.txt", 'w'))
+    # f.close()
     dictToReturn = {'Response': 'Receieved!'}
     return jsonify(dictToReturn)
 
 @app.route('/load_color', methods=['POST'])
 def load_color():
-    f = open('simple-database.txt', 'r')
-    message = f.read()
+    # f = open('simple-database.txt', 'r')
+    # d = f.read()
+    message = json.load(open('simple-database.txt'))
+    ori_hex = message["ori-color"]
+    closest_hex = message["closest"]
+    print(ori_hex, closest_hex)
     if request.method == "POST":
-        return jsonify(hex=message)
+        return jsonify(oriHex=ori_hex, closestHex=closest_hex)
 
 # if __name__ == '__main__':
 #     socketio.run(app)
