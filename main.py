@@ -8,9 +8,7 @@ import time
 #Test whether connected to script
 print("Hello World!")
 
-#Variable
-# ourId = 'EEERover'
-# ourPassword = 'exhibition'
+#Initial Variable
 ourId = "EEERover"
 ourPassword = "exhibition"
 CLIENT_ID = int.from_bytes(machine.unique_id(), 'big')
@@ -76,7 +74,6 @@ def colourValue(r,g,b):
     else:
       S=delta/(1-abs(2*L-1))
 
-
     if R>G and R>B:
         Hue=60*(((G-B)/delta)%6)
     elif G>B:
@@ -91,10 +88,10 @@ def get_colour():
     g=getGreen()
     b=getBlue()
     c=getIntensity()
-    if c > 20000:
+    if c > 100:
         red=min(255,int(5.5*r))
         green=min(255,int(5*g))
-        blue=min(255,int(4.5*b))
+        blue=min(255,int(2*b))
     else:
         red=min(255,int(7*r))
         green=min(255,int(4.5*g))
@@ -102,20 +99,6 @@ def get_colour():
     return colourValue(red,green,blue),"{0:02x}{1:02x}{2:02x}".format(int(red),
                              int(green),
                              int(blue))
-
-
-def html_rgb():
-    r, g, b, c = getRed(),getGreen(),getBlue(),getIntensity()
-    red = pow((int((r/c) * 256) / 255), 2.5) * 255
-    green = pow((int((g/c) * 256) / 255), 2.5) * 255
-    blue = pow((int((b/c) * 256) / 255), 2.5) * 255
-    return red, green, blue
-
-# def html_hex():
-#     r, g, b = html_rgb()
-#     return "{0:02x}{1:02x}{2:02x}".format(int(r),
-#                              int(g),
-#                              int(b))
 
 def toPayLoad(message):
     payload = ujson.dumps(message)
@@ -130,37 +113,41 @@ def connectToWifi(id, password):
     status = sta_if.isconnected()
     print("Connection status:", status)
     client = MQTTClient(str(CLIENT_ID), BROKER_ADDRESS)
+    client.connect()
     return client
 
 def publishMessage(client, topic, payload):
     client.publish(topic, bytes(payload, 'utf-8'))
 
-#Need for while loop
 def sendData(client):
     colour = get_colour()
-    # hex = html_hex()
     tAndL = temperature_and_lux()
-    data = {"Hue": colour[0][0], "Saturation": colour[0][1],
-            "Lightness": colour[0][2],"Value": colour[0][3],
-            "C":colour[0][4],"M":colour[0][5],"Y":colour[0][6],"K":colour[0][7],
-            "hex": colour[1], "temperature": tAndL[0], "intensity": tAndL[1]}
+    data = {"Hue": colour[0][0], 
+            "Saturation": colour[0][1],
+            "Lightness": colour[0][2],
+            "Value": colour[0][3],
+            "C":colour[0][4],
+            "M":colour[0][5],
+            "Y":colour[0][6],
+            "K":colour[0][7],
+            "hex": colour[1], 
+            "temperature": tAndL[0], 
+            "intensity": tAndL[1]}
 
     payload = toPayLoad(message=data)
-    # client.publish(topic, bytes(paylod, 'utf-8'))
     publishMessage(client=client, topic=topic, payload=payload)
 
+#Switch that determine whether to send data to server 
 def switchData():
     if switchPin.value() == 0:
         return True
     elif switchPin.value() == 1:
         return False
+
 #main
 def main():
     initialize()
-    #connect to client
     client = connectToWifi(id=ourId, password=ourPassword)
-    time.sleep(1)
-    client.connect()
     time.sleep(1)
     while True:
         print('SwitchPin Value:', switchPin.value())
@@ -168,4 +155,5 @@ def main():
             sendData(client)
         time.sleep(1)
 
-main()
+if __name__ == "__main__":
+    main()

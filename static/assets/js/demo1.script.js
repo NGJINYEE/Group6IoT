@@ -1,6 +1,6 @@
-// alert('Connected!');
 console.log('Connected!');
 
+//Use jQuery to post request from the server to obtain colour data
 $('#change').click(function(){
   console.log('Clicked!');
   testData = {data: 'Hello from js!'};
@@ -11,27 +11,13 @@ $('#change').click(function(){
     dataType: 'json',
     contentType: 'application/json',
     success: function(data) {
-      // console.log(data.hex);
+      //when successfully received data from the server, decode it into two variables
       const oriColor = '#' + data.oriHex;
       const closestColor = '#' + data.closestHex;
-      // const matchedColor = '#000000'
-      // console.log(color);
-      // console.log(data);
+      //change the class your-color class and closest-color
       $('.your-color').css({backgroundColor: oriColor});
       $('.closest-color').css({backgroundColor: closestColor});
     }
   });
 });
 
-
-// $(document).ready(function(){
-//   var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
-//   socket.on('my response', function(msg){
-//     $('#log').append('<p> Received: ' + msg + data + '</p>');
-//   });
-//
-//   $('form#emit').submit(function(event){
-//     socket.emit('my event', {data: $('#emit_data').val()});
-//     return false;
-//   });
-// });
