@@ -91,10 +91,10 @@ def get_colour():
     g=getGreen()
     b=getBlue()
     c=getIntensity()
-    if c > 20000:
+    if c > 100:
         red=min(255,int(5.5*r))
         green=min(255,int(5*g))
-        blue=min(255,int(4.5*b))
+        blue=min(255,int(2*b))
     else:
         red=min(255,int(7*r))
         green=min(255,int(4.5*g))
