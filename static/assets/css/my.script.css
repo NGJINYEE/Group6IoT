@@ -1,0 +1,69 @@
+body {
+	overflow-y: auto;
+	margin: 20px 20px 20px 20px;
+	background: linear-gradient(to bottom right, black , grey);
+	font-family: 'Roboto', sans-serif;
+}
+
+.app {
+	width: 540px;
+	height: 959px;
+	background-image: url('/static/images/App.jpeg');
+}
+
+
+.closest-color {
+	margin-top: 50px;
+	float: left;
+	border-radius: 25px;
+	border: 3px solid rgba(0,0,0,0.5);
+	align-items: center;
+	align-content: center;
+}
+
+.your-color {
+	margin-top: 50px;
+	float: right;
+	border-radius: 25px;
+	border: 3px solid rgba(0,0,0,0.5);
+	align-items: center;
+	align-content: center;
+}
+
+label {
+	width: 200px;
+    height: 200px;
+    position: relative;
+    margin-left: 60px;
+    position: absolute;
+    margin-top: 90px;
+    color: white;
+}
+
+button {
+	height: 40px;
+	border-radius: 25px;
+	margin: auto;
+    width: 50%;
+    border: 3px solid rgba(0,0,0,0.5);
+    padding: 10px;
+    display: block;
+}
+
+.color-container {
+	width: 200px;
+	height: 200px;
+	margin-left: 25px;
+    margin-right: 25px;
+}
+
+.container {
+	margin: 12px 12px 12 12px;
+}
+
+div {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 12px;
+	margin-bottom: 12px;
+}

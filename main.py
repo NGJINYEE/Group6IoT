@@ -91,7 +91,7 @@ def get_colour():
     if c > 100:
         red=min(255,int(5.5*r))
         green=min(255,int(5*g))
-        blue=min(255,int(2*b))
+        blue=min(255,int(4*b))
     else:
         red=min(255,int(7*r))
         green=min(255,int(4.5*g))
@@ -113,6 +113,7 @@ def connectToWifi(id, password):
     status = sta_if.isconnected()
     print("Connection status:", status)
     client = MQTTClient(str(CLIENT_ID), BROKER_ADDRESS)
+    time.sleep(1)
     client.connect()
     return client
 
@@ -147,8 +148,8 @@ def switchData():
 #main
 def main():
     initialize()
-    client = connectToWifi(id=ourId, password=ourPassword)
     time.sleep(1)
+    client = connectToWifi(id=ourId, password=ourPassword)
     while True:
         print('SwitchPin Value:', switchPin.value())
         if switchData() == True:
