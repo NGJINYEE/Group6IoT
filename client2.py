@@ -48,7 +48,7 @@ def getClosestColor(hex_val):
 
 
 def get_closest_color(hue, saturation, lightness):
-    closest_color = list(color_r.keys())[0]
+    closest_color = list(color_in_hsl.keys())[0]
     min_val = 47.5 * 100 + 28.75 * 100 + 23.75 * 100
 
     for color_name, color_value in color_in_hsl.items():
