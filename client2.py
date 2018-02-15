@@ -9,6 +9,7 @@ color={"darkblue1":'204060',"darkblue":'000020',"darkgreen":'002000',"green":'00
 
 color_in_hsl = {"dark brown": '24,83,33', "dark yellow": "44,100,50", "orange": "24,100,46", "black": '0,0,0', "white": '0,0,100', "red": '0,100,57', "green": '120,100,50', "yellow": '58,100,50', "blue": '240,62,39', "purple": '270,100,50'}
 
+#get closest colour using hex value
 def getClosestColor(hex_val):
     closest_color = list(color.keys())[0]
     y = 255**2.0 + 255**2.0 + 255**2.0
@@ -46,7 +47,7 @@ def getClosestColor(hex_val):
     print('response from server:', res.text)
     dictFromServer = res.json()
 
-
+# get closest colour using hue, saturation, lightness
 def get_closest_color(hue, saturation, lightness):
     closest_color = list(color_in_hsl.keys())[0]
     min_val = 47.5 * 100 + 28.75 * 100 + 23.75 * 100
