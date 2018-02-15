@@ -15,20 +15,22 @@ CLIENT_ID = int.from_bytes(machine.unique_id(), 'big')
 BROKER_ADDRESS = '192.168.0.10'
 i2c = I2C(scl=Pin(5), sda=Pin(4), freq=100000)
 switchPin = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_UP)
-_CYCLES = (0, 1, 2, 3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60)
 topic = 'esys/Arcus/color'
 
-#Functions
+#Functions to set integration time and maximum value of the sensor reading thus its quantisation level
+#address 0x81 set the RGBC timing register
 def integration_time(value=None):
         value = min(614.4, max(2.4, value))
         cycles = int(value / 2.4)
         i2c.writeto_mem(41,0x81,bytearray([256 - cycles]))
 
 def initialize():
-    #Activate the sensor reading
+    #Activate the sensor reading and set the integration time to 2.4ms to set the max reading to 1024
+    #addresss 0x80 set the enable register
     i2c.writeto_mem(41,0x80,bytearray([0x03]))
     integration_time(2.4)
-
+        
+# to read reading of various colour and intensity
 def getGreen():
     green = i2c.readfrom_mem(41,0x98,2)
     return int.from_bytes(green,'little')
@@ -45,6 +47,7 @@ def getIntensity():
     clear = i2c.readfrom_mem(41,0x94,2)
     return int.from_bytes(clear,'little')
 
+# to convert RGB value and intensity value into color temperature and lux
 def temperature_and_lux():
         r, g, b, c = getRed(),getGreen(),getBlue(),getIntensity()
         x = -0.14282 * r + 1.54924 * g + -0.95641 * b
@@ -55,6 +58,7 @@ def temperature_and_lux():
         cct = 449.0 * n**3 + 3525.0 * n**2 + 6823.3 * n + 5520.33
         return cct, y
 
+# to convert rgb value into different formats(hue,saturation,lightness,value,CMYK)
 def colourValue(r,g,b):
     R=r/255
     G=g/255
@@ -80,14 +84,15 @@ def colourValue(r,g,b):
         Hue=60*(2.0+(B-R)/(delta))
     else:
         Hue=60*(4.0+(R-G)/(delta))
+        return Hue,S*100,L*100,V*100,C,M,Y,K
 
-    return Hue,S*100,L*100,V*100,C,M,Y,K
-
+#to convert rgb value into hex and return reading in various format
 def get_colour():
     r=getRed()
     g=getGreen()
     b=getBlue()
     c=getIntensity()
+    # special case for intensity greater than 100 with diffrent gain compared to normal case
     if c > 100:
         red=min(255,int(5.5*r))
         green=min(255,int(5*g))
@@ -99,11 +104,11 @@ def get_colour():
     return colourValue(red,green,blue),"{0:02x}{1:02x}{2:02x}".format(int(red),
                              int(green),
                              int(blue))
-
+#to convert data into ujson message format
 def toPayLoad(message):
     payload = ujson.dumps(message)
     return payload
-
+#to connect wifi
 def connectToWifi(id, password):
     ap_if = network.WLAN(network.AP_IF)
     ap_if.active(False)
@@ -117,6 +122,7 @@ def connectToWifi(id, password):
     client.connect()
     return client
 
+#to publish message
 def publishMessage(client, topic, payload):
     client.publish(topic, bytes(payload, 'utf-8'))
 
