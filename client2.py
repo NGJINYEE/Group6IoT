@@ -61,7 +61,7 @@ def get_closest_color(hue, saturation, lightness):
         S = saturation
         L = lightness
 
-        #human eye sensitivity is 0.3 to red, 0.59 to green, and 0.11 to blue
+        #human eye sensitivity is 47.5% to hue ,28.75% to saturation, 23.75% to lightness
         diff = 47.5 * abs(h - H) / 3.6 + 28.75 * abs(s - S) + 23.75 * abs(l - L)
 
         if diff < min_val:
