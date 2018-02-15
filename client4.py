@@ -26,11 +26,10 @@ def getClosestColor(hex_val):
         g = int(color_value[2:4], 16)
         b = int(color_value[4:], 16)
 
-        # human eye sensitivity is 03 to red,0.59 to green,0.11 to blue
+        # human eye sensitivity is 0.3 to red,0.59 to green,0.11 to blue
         diff = 0.3 * abs(r - R) + 0.59 * abs(g - G) + 0.11 * abs(b - B)
 
-        # print ("Standard:", "R: ", r, "G: ", g, "B: ", b, "diff: ", diff)
-        # print ("Data:", "R: ", R, "G: ", G, "B: ", B, "diff: ", diff, "color: ", color_name)
+        
         if diff < min_val:
             min_val = diff
             closest_color = color_name
