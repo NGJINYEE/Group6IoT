@@ -31,8 +31,6 @@ def getClosestColor(hex_val):
         x = (r - R) ** 2.0 + (g - G) ** 2.0 + (b - B) ** 2.0
         diff = math.sqrt(x)
 
-        # print ("Standard:", "R: ", r, "G: ", g, "B: ", b, "diff: ", diff)
-        # print ("Data:", "R: ", R, "G: ", G, "B: ", B, "diff: ", diff, "color: ", color_name)
         if diff < min_val:
             min_val = diff
             closest_color = color_name
